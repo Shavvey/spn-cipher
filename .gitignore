@@ -1,0 +1,2 @@
+# ignore al object file inside src dir
+src/*.o
