@@ -4,8 +4,10 @@
 #include <stdlib.h>
 
 int main() {
-  Key key = 32768;
-  key = left_circ_shift(&key);
-  printf("Key: %d\n", key);
+  Block block = 23;
+  block = bit_permutation(&block);
+  printf("New block val: %d\n", block);
+  block = bit_permutation(&block);
+  printf("Old block val: %d\n", block);
   return EXIT_SUCCESS;
 }

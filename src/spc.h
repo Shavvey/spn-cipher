@@ -15,7 +15,7 @@ typedef uint16_t Key;
 #define S_INPUT_SIZE 4
 // S-BOX DEFINITIONS
 typedef struct {
-  uint8_t map : S_INPUT_SIZE;
+  uint8_t box : S_INPUT_SIZE;
 } Sbox;
 // table of sbox input and output values, essentially just a static array list
 // (no resizing / rebuilding options)
@@ -37,9 +37,10 @@ extern const PTable P_TABLE;
 // put in block, get a new block according to the s-box mapping
 STable make_table(void);
 // return input of sbox, just does a linear search to find using output
-uint16_t get_inverse(Sbox sbox);
-Sbox get_sbox(uint16_t idx);
+uint8_t get_inverse_sbox(Sbox output);
+Sbox get_sbox(uint8_t idx);
 Key left_circ_shift(Key *key);
 Sbox s_box(Block *input);
 Block key_mixing(Block *input, Key *key);
+Block bit_permutation(Block *block);
 #endif // INCLUDE_SRC_SPC_H_
