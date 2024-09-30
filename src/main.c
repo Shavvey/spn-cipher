@@ -19,10 +19,18 @@ int main(int argc, char *argv[]) {
     Mode mode = decode_flag(flag);
     Block block = decode_text(text);
     Key k = decode_key(key);
+    Key k1 = 1110;
+    Block b1 = 11401;
+    b1 = encrypt(&b1, &k1, ROUNDS);
+    printf("E: %d\n", b1);
+    b1 = decrypt(&b1, &k1, ROUNDS);
+    printf("D: %d\n", b1);
     switch (mode) {
     case ENCRYPT:
       block = encrypt(&block, &k, ROUNDS);
       printf("Encrypted block: %d\n", block);
+      block = decrypt(&block, &k, ROUNDS);
+      printf("Decrypted block: %d\n", block);
       break;
     case DECRYPT:
       block = decrypt(&block, &k, ROUNDS);

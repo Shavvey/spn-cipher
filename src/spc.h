@@ -50,5 +50,5 @@ Key get_sub_key(Key *key, uint8_t n);
 Block bit_permutation(Block *block);
 Block encrypt(Block *block, Key *key, uint32_t rounds);
 Block decrypt(Block *block, Key *key, uint32_t rounds);
-void print_block(Block *block);
+void print_block(Block block);
 #endif // INCLUDE_SRC_SPC_H_
