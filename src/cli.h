@@ -10,5 +10,5 @@
 typedef enum { ENCRYPT = 1, DECRYPT } Mode;
 Mode decode_flag(const char *flag);
 Block decode_text(const char *text);
-Block decode_key(const char *key);
+Key decode_key(const char *key);
 #endif // INCLUDE_SRC_CLI_H_

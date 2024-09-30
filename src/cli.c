@@ -41,7 +41,7 @@ Block decode_text(const char *text) {
   return block;
 }
 
-Block decode_key(const char *key) {
+Key decode_key(const char *key) {
   Key k = 0;
   // assuuming big endianess
   uint32_t idx = 0;
