@@ -1,5 +1,6 @@
 #include "spc.h"
 #include <stdint.h>
+#include <stdlib.h>
 // creates the mapping used for sboxes
 const STable S_TABLE = {.sbox = {{0xE},   // 0
                                  {0x4},   // 1
@@ -104,7 +105,7 @@ Block sub_key_mix(Block *block, Key *key) {
 }
 
 Block encrypt(Block *block, Key *key, uint32_t rounds) {
-  for (int i = 1; i <= rounds; i++) {
+  for (uint32_t i = 1; i <= rounds; i++) {
     // first obtain new sub via key shifting
     Key k = get_sub_key(key, i);
     // mix new subkey
@@ -125,7 +126,7 @@ Block encrypt(Block *block, Key *key, uint32_t rounds) {
 }
 
 Block decrypt(Block *block, Key *key, uint32_t rounds) {
-  for (int i = rounds; i >= 1; i--) {
+  for (uint32_t i = rounds; i >= 1; i--) {
     // do the inverse of the rounds and operations we did during encryption step
     if (i < rounds) {
       *block = bit_permutation(block);
@@ -139,4 +140,19 @@ Block decrypt(Block *block, Key *key, uint32_t rounds) {
     // repeat three more times
   }
   return *block;
+}
+char *block_as_bitstring(Block block) {
+  char *str = (char *)malloc(sizeof(char) * BLOCK_SIZE);
+  uint16_t mask = 1;
+  for (int i = 0; i < BLOCK_SIZE; i++) {
+    uint16_t b = (block & (mask << i));
+    if (b == 1) {
+      str[i] = '1';
+    } else {
+      str[i] = '0';
+    }
+  }
+  // null terminate the string
+  str[BLOCK_SIZE] = '\0';
+  return str;
 }
