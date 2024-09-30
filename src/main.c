@@ -16,11 +16,22 @@ int main(int argc, char *argv[]) {
     const char *flag = argv[FLAG];
     const char *text = argv[TEXT];
     const char *key = argv[KEY];
-    decode_flag(flag);
+    Mode mode = decode_flag(flag);
     Block block = decode_text(text);
     Key k = decode_key(key);
-    printf("Decoded text: %d\n", block);
-    printf("Decoded key: %d\n", k);
+    switch (mode) {
+    case ENCRYPT:
+      block = encrypt(&block, &k, ROUNDS);
+      printf("Encrypted block: %d\n", block);
+      break;
+    case DECRYPT:
+      block = decrypt(&block, &k, ROUNDS);
+      printf("Decrypted block: %d\n", block);
+      break;
+    default:
+      fprintf(stderr, "Unimplemented!");
+      break;
+    }
   }
   return EXIT_SUCCESS;
 }

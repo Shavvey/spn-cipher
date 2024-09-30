@@ -31,10 +31,8 @@ Block decode_text(const char *text) {
             len);
   }
   while (*text != '\0') {
-    printf("index %d\n", idx);
     // we can safely ingore the zeroes, they don't add any information
     if (*text == '1') {
-      printf("Val %d\n", (1 << (BLOCK_SIZE - 1 - idx)));
       block += (1 << (BLOCK_SIZE - 1 - idx));
     }
     idx++;
