@@ -1,7 +1,8 @@
 #ifndef INCLUDE_SRC_SPC_H_
 #define INCLUDE_SRC_SPC_H_
 #include <stdint.h>
-
+#define ROUNDS 4
+#define BLOCK_SIZE 16
 // BLOCK DEFINITIONS
 // each block should be 16 bits long
 typedef uint16_t Block;
@@ -13,6 +14,7 @@ typedef uint16_t Key;
 
 // create a left circular shift
 #define S_INPUT_SIZE 4
+#define S_BOXES_PER_BLOCK BLOCK_SIZE / S_INPUT_SIZE
 // S-BOX DEFINITIONS
 typedef struct {
   uint8_t box : S_INPUT_SIZE;
@@ -40,7 +42,11 @@ STable make_table(void);
 uint8_t get_inverse_sbox(Sbox output);
 Sbox get_sbox(uint8_t idx);
 Key left_circ_shift(Key *key);
-Sbox s_box(Block *input);
-Block key_mixing(Block *input, Key *key);
+Block s_box(Block *block);
+Block inverse_s_box(Block *block);
+Block sub_key_mix(Block *block, Key *key);
+Key get_sub_key(Key *key, uint8_t n);
 Block bit_permutation(Block *block);
+Block encrypt(Block *block, Key *key, uint32_t rounds);
+Block decrypt(Block *block, Key *key, uint32_t rounds);
 #endif // INCLUDE_SRC_SPC_H_

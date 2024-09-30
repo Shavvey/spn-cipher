@@ -4,10 +4,11 @@
 #include <stdlib.h>
 
 int main() {
-  Block block = 23;
-  block = bit_permutation(&block);
-  printf("New block val: %d\n", block);
-  block = bit_permutation(&block);
-  printf("Old block val: %d\n", block);
+  Key key = 32768;
+  Block block = 7;
+  block = encrypt(&block, &key, ROUNDS);
+  printf("New block %d\n", block);
+  block = decrypt(&block, &key, ROUNDS);
+  printf("Old block (hopefully) %d\n", block);
   return EXIT_SUCCESS;
 }
