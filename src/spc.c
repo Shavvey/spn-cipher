@@ -108,14 +108,16 @@ Block encrypt(Block *block, Key *key, uint32_t rounds) {
   for (int i = 1; i <= rounds; i++) {
     printf("Round: %d\n", i);
     // first obtain new sub via key shifting
-    *key = get_sub_key(key, i);
-    printf("Round key: %d\n", *key);
+    Key k = get_sub_key(key, i);
+    printf("Round key: %d\n", k);
     // mix new subkey
-    *block = sub_key_mix(block, key);
+    // *block = sub_key_mix(block, &k);
     // then use s-boxes to substitute 4 bit portions of block
     *block = s_box(block);
     // then use permutation on s-box block output
-    *block = bit_permutation(block);
+    if (i < rounds) {
+      *block = bit_permutation(block);
+    }
     // repeat 3 more times for a total of 4 rounds
   }
   // give back the block mem
@@ -126,14 +128,18 @@ Block decrypt(Block *block, Key *key, uint32_t rounds) {
   for (int i = rounds; i >= 1; i--) {
     printf("Round: %d\n", i);
     // first generate subkey
-    *key = get_sub_key(key, i);
-    printf("Round key: %d\n", *key);
+    Key k = get_sub_key(key, i);
+    printf("Round key: %d\n", k);
     // then mix sub key
-    *block = sub_key_mix(block, key);
+    // *block = sub_key_mix(block, &k);
     // then use sboxes, inverted this time
-    *block = inverse_s_box(block);
     // then use bit permutation
-    *block = bit_permutation(block);
+
+    if (i < rounds) {
+      *block = bit_permutation(block);
+    }
+
+    *block = inverse_s_box(block);
     // repeat three more times
   }
   return *block;
