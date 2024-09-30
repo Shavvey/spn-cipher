@@ -1,6 +1,5 @@
 #include "spc.h"
 #include <stdint.h>
-#include <stdio.h>
 // creates the mapping used for sboxes
 const STable S_TABLE = {.sbox = {{0xE},   // 0
                                  {0x4},   // 1
@@ -100,23 +99,24 @@ Key get_sub_key(Key *key, uint8_t n) {
 
 Block sub_key_mix(Block *block, Key *key) {
   // create new subkey via the left circular shift
-  *block = *block ^ *key;
+  *block = *key ^ *block;
   return *block;
 }
 
 Block encrypt(Block *block, Key *key, uint32_t rounds) {
   for (int i = 1; i <= rounds; i++) {
-    printf("Round: %d\n", i);
     // first obtain new sub via key shifting
     Key k = get_sub_key(key, i);
-    printf("Round key: %d\n", k);
     // mix new subkey
-    // *block = sub_key_mix(block, &k);
+    *block = sub_key_mix(block, &k);
     // then use s-boxes to substitute 4 bit portions of block
     *block = s_box(block);
     // then use permutation on s-box block output
     if (i < rounds) {
       *block = bit_permutation(block);
+    } else {
+      Key k = get_sub_key(key, i + 1);
+      *block = sub_key_mix(block, &k);
     }
     // repeat 3 more times for a total of 4 rounds
   }
@@ -126,20 +126,16 @@ Block encrypt(Block *block, Key *key, uint32_t rounds) {
 
 Block decrypt(Block *block, Key *key, uint32_t rounds) {
   for (int i = rounds; i >= 1; i--) {
-    printf("Round: %d\n", i);
-    // first generate subkey
-    Key k = get_sub_key(key, i);
-    printf("Round key: %d\n", k);
-    // then mix sub key
-    // *block = sub_key_mix(block, &k);
-    // then use sboxes, inverted this time
-    // then use bit permutation
-
+    // do the inverse of the rounds and operations we did during encryption step
     if (i < rounds) {
       *block = bit_permutation(block);
+    } else {
+      Key k = get_sub_key(key, i + 1);
+      *block = sub_key_mix(block, &k);
     }
-
     *block = inverse_s_box(block);
+    Key k = get_sub_key(key, i);
+    *block = sub_key_mix(block, &k);
     // repeat three more times
   }
   return *block;
