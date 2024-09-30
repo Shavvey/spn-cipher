@@ -10,6 +10,7 @@ typedef uint16_t Block;
 // KEY DEFINITIONS
 // key should be 16 bits long
 typedef uint16_t Key;
+#define KEY_SIZE 16
 #define BYTE 8 // used to circ-shift
 
 // create a left circular shift

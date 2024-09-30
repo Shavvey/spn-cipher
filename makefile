@@ -4,8 +4,8 @@ CC=gcc
 CFLAGS=-W -Wall -g
 EXEC=spc
 # list of sources i need make to compile
-OBJS=src/main.o src/spc.o
-DEPS=src/spc.h
+OBJS=src/main.o src/spc.o src/cli.o
+DEPS=src/spc.h src/cli.h
 
 all: $(EXEC)
 
@@ -16,6 +16,12 @@ all: $(EXEC)
 # rule to make the final executable from the created object files
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) $(SDL_CFLAGS) $(OBJS) -o $(EXEC)
+
+encrypt: $(EXEC)
+	./$(EXEC) -e 1110001011010100 0001001000110100
+
+decrypt: $(EXEC)
+	./$(EXEC) -d 1110001011010100 0001001000110100
 
 # clean out the object files and the final executable
 clean:
