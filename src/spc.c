@@ -1,5 +1,6 @@
 #include "spc.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 // creates the mapping used for sboxes
 const STable S_TABLE = {.sbox = {{0xE},   // 0
@@ -144,12 +145,15 @@ Block decrypt(Block *block, Key *key, uint32_t rounds) {
 char *block_as_bitstring(Block block) {
   char *str = (char *)malloc(sizeof(char) * BLOCK_SIZE);
   uint16_t mask = 1;
-  for (int i = 0; i < BLOCK_SIZE; i++) {
-    uint16_t b = (block & (mask << i));
+  int size = BLOCK_SIZE - 1;
+  // assuming big endianess
+  for (int i = size; i >= 0; i--) {
+    uint16_t b = (block & (mask << (size - i)));
+    b = (b >> (size - i));
     if (b == 1) {
-      str[i] = '1';
+      *(str + i) = '1';
     } else {
-      str[i] = '0';
+      *(str + i) = '0';
     }
   }
   // null terminate the string

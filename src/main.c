@@ -19,20 +19,19 @@ int main(int argc, char *argv[]) {
     Mode mode = decode_flag(flag);
     Block block = decode_text(text);
     Key k = decode_key(key);
-    Block b = 7;
-    char *str = block_as_bitstring(b);
+    char *strb;
     switch (mode) {
     case ENCRYPT:
-      printf("Orignal block: %d\n", block);
       block = encrypt(&block, &k, ROUNDS);
-      printf("Encrypted block: %d\n", block);
-      block = decrypt(&block, &k, ROUNDS);
-      printf("Decrypted block: %d\n", block);
+      strb = block_as_bitstring(block);
+      printf("Encrypted block: %s -> %d\n", strb, block);
+      free(strb);
       break;
     case DECRYPT:
-      printf("Orignal block: %d\n", block);
       block = decrypt(&block, &k, ROUNDS);
-      printf("Decrypted block: %d\n", block);
+      strb = block_as_bitstring(block);
+      printf("Decrypted block: %s -> %d\n", strb, block);
+      free(strb);
       break;
     default:
       fprintf(stderr, "Unimplemented!");

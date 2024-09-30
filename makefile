@@ -20,7 +20,7 @@ $(EXEC): $(OBJS)
 encrypt: $(EXEC)
 	./$(EXEC) -e 1010101010101010 0001001000110100
 decrypt: $(EXEC)
-	./$(EXEC) -d 1110001011010100 0001001000110100
+	./$(EXEC) -d 0111100011111000 0001001000110100
 
 # clean out the object files and the final executable
 clean:
