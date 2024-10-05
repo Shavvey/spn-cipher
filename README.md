@@ -1,4 +1,4 @@
-# Lab 1 - Substituion and Permutation Networks
+# Lab 1 - Substitution and Permutation Networks
 
 ## Decription
 
