@@ -42,7 +42,7 @@ STable make_table(void);
 // return input of sbox, just does a linear search to find using output
 uint8_t get_inverse_sbox(Sbox output);
 Sbox get_sbox(uint8_t idx);
-Key left_circ_shift(Key key, int n);
+Key left_circ_shift(Key *key, int n);
 Block s_box(Block *block);
 Block inverse_s_box(Block *block);
 Block sub_key_mix(Block *block, Key *key);

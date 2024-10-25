@@ -25,8 +25,8 @@ const PTable P_TABLE = {
 // source: https://stackoverflow.com/questions/13289397/circular-shift-in-c
 // preform a complementary right shift each time we preform the left shift
 // and then OR the results
-Key left_circ_shift(Key key, int n) {
-  return (key << n) | (key >> ((sizeof(key) * BYTE - n)));
+Key left_circ_shift(Key *key, int n) {
+  return (*key << n) | (*key >> ((sizeof(key) * BYTE - n)));
 }
 // simple wrapper to get an sbox from the table
 Sbox get_sbox(uint8_t idx) {
@@ -91,8 +91,15 @@ Block bit_permutation(Block *block) {
 }
 // gets K_b to K_b +n
 Key get_sub_key(Key key, uint8_t n) {
+  Key k = key;
   // apply the left circular shift
-  Key k = left_circ_shift(key, n);
+  for (int i = 1; i <= n; i++) {
+    if (i % 2 == 0) {
+      return left_circ_shift(&k, 1);
+    } else {
+      return left_circ_shift(&k, 2);
+    }
+  }
   return k;
 }
 
