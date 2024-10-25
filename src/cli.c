@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 Mode decode_flag(const char *flag) {
   // loop through null terminated string
   while (*flag != '\0') {

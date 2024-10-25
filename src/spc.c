@@ -1,6 +1,5 @@
 #include "spc.h"
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 // creates the mapping used for sboxes
 const STable S_TABLE = {.sbox = {{0xE},   // 0
@@ -146,7 +145,6 @@ char *block_as_bitstring(Block block) {
   char *str = (char *)malloc(sizeof(char) * BLOCK_SIZE);
   uint16_t mask = 1;
   int size = BLOCK_SIZE - 1;
-  // assuming big endianess
   for (int i = size; i >= 0; i--) {
     uint16_t b = (block & (mask << (size - i)));
     b = (b >> (size - i));
