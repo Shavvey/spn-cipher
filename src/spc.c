@@ -25,8 +25,8 @@ const PTable P_TABLE = {
 // source: https://stackoverflow.com/questions/13289397/circular-shift-in-c
 // preform a complementary right shift each time we preform the left shift
 // and then OR the results
-Key left_circ_shift(Key *key) {
-  return (*key << 1) | (*key >> ((sizeof(*key) * BYTE - 1)));
+Key left_circ_shift(Key key, int n) {
+  return (key << n) | (key >> ((sizeof(key) * BYTE - n)));
 }
 // simple wrapper to get an sbox from the table
 Sbox get_sbox(uint8_t idx) {
@@ -90,11 +90,9 @@ Block bit_permutation(Block *block) {
   return new_block;
 }
 // gets K_b to K_b +n
-Key get_sub_key(Key *key, uint8_t n) {
-  Key k = *key;
-  for (int i = 0; i < n; i++) {
-    k = left_circ_shift(&k);
-  }
+Key get_sub_key(Key key, uint8_t n) {
+  // apply the left circular shift
+  Key k = left_circ_shift(key, n);
   return k;
 }
 
@@ -104,42 +102,42 @@ Block sub_key_mix(Block *block, Key *key) {
   return *block;
 }
 
-Block encrypt(Block *block, Key *key, uint32_t rounds) {
+Block encrypt(Block block, Key key, uint32_t rounds) {
   for (uint32_t i = 1; i <= rounds; i++) {
     // first obtain new sub via key shifting
     Key k = get_sub_key(key, i);
     // mix new subkey
-    *block = sub_key_mix(block, &k);
+    block = sub_key_mix(&block, &k);
     // then use s-boxes to substitute 4 bit portions of block
-    *block = s_box(block);
+    block = s_box(&block);
     // then use permutation on s-box block output
     if (i < rounds) {
-      *block = bit_permutation(block);
+      block = bit_permutation(&block);
     } else {
       Key k = get_sub_key(key, i + 1);
-      *block = sub_key_mix(block, &k);
+      block = sub_key_mix(&block, &k);
     }
     // repeat 3 more times for a total of 4 rounds
   }
   // give back the block mem
-  return *block;
+  return block;
 }
 
-Block decrypt(Block *block, Key *key, uint32_t rounds) {
+Block decrypt(Block block, Key key, uint32_t rounds) {
   for (uint32_t i = rounds; i >= 1; i--) {
     // do the inverse of the rounds and operations we did during encryption step
     if (i < rounds) {
-      *block = bit_permutation(block);
+      block = bit_permutation(&block);
     } else {
       Key k = get_sub_key(key, i + 1);
-      *block = sub_key_mix(block, &k);
+      block = sub_key_mix(&block, &k);
     }
-    *block = inverse_s_box(block);
+    block = inverse_s_box(&block);
     Key k = get_sub_key(key, i);
-    *block = sub_key_mix(block, &k);
+    block = sub_key_mix(&block, &k);
     // repeat three more times
   }
-  return *block;
+  return block;
 }
 char *block_as_bitstring(Block block) {
   char *str = (char *)malloc(sizeof(char) * BLOCK_SIZE);
