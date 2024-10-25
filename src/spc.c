@@ -69,6 +69,7 @@ Block inverse_s_box(Block *block) {
   *block = new_block;
   return *block;
 }
+
 Block bit_permutation(Block *block) {
   Block new_block = 0;
   int size = 1 << 4;
@@ -91,16 +92,11 @@ Block bit_permutation(Block *block) {
 }
 // gets K_b to K_b +n
 Key get_sub_key(Key key, uint8_t n) {
-  Key k = key;
   // apply the left circular shift
   for (int i = 1; i <= n; i++) {
-    if (i % 2 == 0) {
-      return left_circ_shift(&k, 1);
-    } else {
-      return left_circ_shift(&k, 2);
-    }
+    (i % 2 == 0) ? left_circ_shift(&key, 1) : left_circ_shift(&key, 2);
   }
-  return k;
+  return key;
 }
 
 Block sub_key_mix(Block *block, Key *key) {
@@ -111,23 +107,24 @@ Block sub_key_mix(Block *block, Key *key) {
 
 Block encrypt(Block block, Key key, uint32_t rounds) {
   uint32_t i = 1;
+  Block b = block;
   for (; i <= rounds; i++) {
     // first obtain new sub via key shifting
     Key k = get_sub_key(key, i);
     // mix new subkey
-    block = sub_key_mix(&block, &k);
+    b = sub_key_mix(&b, &k);
     // then use s-boxes to substitute 4 bit portions of block
-    block = s_box(&block);
+    b = s_box(&b);
     // then use permutation on s-box block output
     if (i < rounds) {
-      block = bit_permutation(&block);
+      b = bit_permutation(&b);
     }
     // repeat 3 more times for a total of 4 rounds
   }
   Key k = get_sub_key(key, i + 1);
-  block = sub_key_mix(&block, &k);
+  b = sub_key_mix(&b, &k);
   // give back the block mem
-  return block;
+  return b;
 }
 
 Block decrypt(Block block, Key key, uint32_t rounds) {
