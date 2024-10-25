@@ -110,7 +110,8 @@ Block sub_key_mix(Block *block, Key *key) {
 }
 
 Block encrypt(Block block, Key key, uint32_t rounds) {
-  for (uint32_t i = 1; i <= rounds; i++) {
+  uint32_t i = 1;
+  for (; i <= rounds; i++) {
     // first obtain new sub via key shifting
     Key k = get_sub_key(key, i);
     // mix new subkey
@@ -120,24 +121,23 @@ Block encrypt(Block block, Key key, uint32_t rounds) {
     // then use permutation on s-box block output
     if (i < rounds) {
       block = bit_permutation(&block);
-    } else {
-      Key k = get_sub_key(key, i + 1);
-      block = sub_key_mix(&block, &k);
     }
     // repeat 3 more times for a total of 4 rounds
   }
+  Key k = get_sub_key(key, i + 1);
+  block = sub_key_mix(&block, &k);
   // give back the block mem
   return block;
 }
 
 Block decrypt(Block block, Key key, uint32_t rounds) {
-  for (uint32_t i = rounds; i >= 1; i--) {
+  uint32_t i = rounds;
+  Key k = get_sub_key(key, i + 1);
+  block = sub_key_mix(&block, &k);
+  for (; i >= 1; i--) {
     // do the inverse of the rounds and operations we did during encryption step
     if (i < rounds) {
       block = bit_permutation(&block);
-    } else {
-      Key k = get_sub_key(key, i + 1);
-      block = sub_key_mix(&block, &k);
     }
     block = inverse_s_box(&block);
     Key k = get_sub_key(key, i);

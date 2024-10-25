@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
       free(strb);
       break;
     default:
-      fprintf(stderr, "Unimplemented!");
+      fprintf(stderr, "[ERROR]: Unimplemented!");
       break;
     }
   }
