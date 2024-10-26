@@ -39,8 +39,21 @@ int main(int argc, char *argv[]) {
       printf("Decrypted block: %s -> %d\n", strb, block);
       free(strb);
       break;
+    case TEST:
+      strb = block_as_bitstring(block);
+      printf("Original block:  %s -> %d\n", strb, block);
+      free(strb);
+      block = encrypt(block, k, ROUNDS);
+      strb = block_as_bitstring(block);
+      printf("Encrypted block: %s -> %d\n", strb, block);
+      free(strb);
+      block = decrypt(block, k, ROUNDS);
+      strb = block_as_bitstring(block);
+      printf("Decrypted block: %s -> %d\n", strb, block);
+      free(strb);
+      break;
     default:
-      fprintf(stderr, "[ERROR]: Unimplemented!");
+      fprintf(stderr, "[ERROR]: Unimplemented!\n");
       break;
     }
   }

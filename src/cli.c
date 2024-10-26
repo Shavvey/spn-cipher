@@ -12,6 +12,9 @@ Mode decode_flag(const char *flag) {
       if (*(flag + 1) == 'd') {
         return DECRYPT;
       }
+      if (*(flag + 1) == 't') {
+        return TEST;
+      }
     }
     flag++;
   }
