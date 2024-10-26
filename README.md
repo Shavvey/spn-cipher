@@ -1,6 +1,6 @@
 # Lab 1 - Substitution and Permutation Networks
 
-## Decription
+## Description
 
 An implementation of a substitution and permutation network (SPN),
 a simple symmetric block-cipher used as the base for many different

@@ -38,6 +38,8 @@ Sbox get_sbox(uint8_t idx) {
 uint8_t get_inverse_sbox(Sbox output) {
   int t_size = 1 << S_INPUT_SIZE;
   int idx = 0;
+  // loop through entires of sbox arr and
+  // the index that maps the sbox
   for (; idx < t_size; idx++) {
     Sbox s = get_sbox(idx);
     if (s.box == output.box) {
@@ -53,6 +55,7 @@ Block s_box(Block block) {
     Block bit_width = (15 << (4 * i));
     uint8_t idx = (uint8_t)((block & bit_width) >> 4 * i);
     Sbox s = get_sbox(idx);
+    // append new 4-bits obtained from s-box mapping
     new_block += (uint16_t)(s.box << 4 * i);
   }
   return new_block;
@@ -64,6 +67,7 @@ Block inverse_s_box(Block block) {
     Block bit_width = (15 << (4 * i));
     Sbox s = {.box = (uint8_t)((block & bit_width) >> 4 * i)};
     uint8_t idx = get_inverse_sbox(s);
+    // append new 4-bits obtained from reverse s-box mapping
     new_block += (uint16_t)(idx << 4 * i);
   }
   return new_block;
@@ -106,7 +110,7 @@ Key get_sub_key(Key key, uint8_t n) {
 }
 
 Block sub_key_mix(Block block, Key key) {
-  // create new subkey via the left circular shift
+  // mix the sub-key we calculated via the XOR
   return key ^ block;
 }
 
