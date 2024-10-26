@@ -25,8 +25,9 @@ const PTable P_TABLE = {
 // source: https://stackoverflow.com/questions/13289397/circular-shift-in-c
 // preform a complementary right shift each time we preform the left shift
 // and then OR the results
-Key left_circ_shift(Key *key, int n) {
-  return (*key << n) | (*key >> ((sizeof(key) * BYTE - n)));
+Key left_circ_shift(Key key, int n) {
+  Key k = (key << n) | (key >> ((sizeof(key) * BYTE - n)));
+  return k;
 }
 // simple wrapper to get an sbox from the table
 Sbox get_sbox(uint8_t idx) {
@@ -46,31 +47,29 @@ uint8_t get_inverse_sbox(Sbox output) {
   return idx;
 }
 
-Block s_box(Block *block) {
+Block s_box(Block block) {
   Block new_block = 0;
   for (int i = 0; i < S_BOXES_PER_BLOCK; i++) {
     Block bit_width = (15 << (4 * i));
-    uint8_t idx = (uint8_t)((*block & bit_width) >> 4 * i);
+    uint8_t idx = (uint8_t)((block & bit_width) >> 4 * i);
     Sbox s = get_sbox(idx);
     new_block += (uint16_t)(s.box << 4 * i);
   }
-  *block = new_block;
-  return *block;
+  return new_block;
 }
 
-Block inverse_s_box(Block *block) {
+Block inverse_s_box(Block block) {
   Block new_block = 0;
   for (int i = 0; i < S_BOXES_PER_BLOCK; i++) {
     Block bit_width = (15 << (4 * i));
-    Sbox s = {.box = (uint8_t)((*block & bit_width) >> 4 * i)};
+    Sbox s = {.box = (uint8_t)((block & bit_width) >> 4 * i)};
     uint8_t idx = get_inverse_sbox(s);
     new_block += (uint16_t)(idx << 4 * i);
   }
-  *block = new_block;
-  return *block;
+  return new_block;
 }
 
-Block bit_permutation(Block *block) {
+Block bit_permutation(Block block) {
   Block new_block = 0;
   int size = 1 << 4;
   for (int i = 0; i < size; i++) {
@@ -79,7 +78,7 @@ Block bit_permutation(Block *block) {
     Block pos = i + 1;
     int diff = npos - pos;
     // printf("Old pos: %d -> New pos: %d, Diff %d\n", pos, npos, diff);
-    Block bit = *block & (1 << i);
+    Block bit = block & (1 << i);
     // printf("Bit %d: %d\n", pos, bit);
     if (diff > 0) {
       bit = bit << diff;
@@ -90,55 +89,56 @@ Block bit_permutation(Block *block) {
   }
   return new_block;
 }
+
 // gets K_b to K_b +n
 Key get_sub_key(Key key, uint8_t n) {
+  // k_0 = k
+  Key k = key;
   // apply the left circular shift
-  for (int i = 1; i <= n; i++) {
-    (i % 2 == 0) ? left_circ_shift(&key, 1) : left_circ_shift(&key, 2);
+  for (uint8_t i = 0; i < n; i++) {
+    k = left_circ_shift(k, 1);
   }
-  return key;
+  return k;
 }
 
-Block sub_key_mix(Block *block, Key *key) {
+Block sub_key_mix(Block block, Key key) {
   // create new subkey via the left circular shift
-  *block = *key ^ *block;
-  return *block;
+  return key ^ block;
 }
 
 Block encrypt(Block block, Key key, uint32_t rounds) {
   uint32_t i = 1;
-  Block b = block;
   for (; i <= rounds; i++) {
-    // first obtain new sub via key shifting
+    // obtain round sub key via left circ shift
     Key k = get_sub_key(key, i);
     // mix new subkey
-    b = sub_key_mix(&b, &k);
+    block = sub_key_mix(block, k);
     // then use s-boxes to substitute 4 bit portions of block
-    b = s_box(&b);
+    block = s_box(block);
     // then use permutation on s-box block output
     if (i < rounds) {
-      b = bit_permutation(&b);
+      block = bit_permutation(block);
     }
     // repeat 3 more times for a total of 4 rounds
   }
   Key k = get_sub_key(key, i + 1);
-  b = sub_key_mix(&b, &k);
+  block = sub_key_mix(block, k);
   // give back the block mem
-  return b;
+  return block;
 }
 
 Block decrypt(Block block, Key key, uint32_t rounds) {
   uint32_t i = rounds;
   Key k = get_sub_key(key, i + 1);
-  block = sub_key_mix(&block, &k);
+  block = sub_key_mix(block, k);
   for (; i >= 1; i--) {
     // do the inverse of the rounds and operations we did during encryption step
     if (i < rounds) {
-      block = bit_permutation(&block);
+      block = bit_permutation(block);
     }
-    block = inverse_s_box(&block);
+    block = inverse_s_box(block);
     Key k = get_sub_key(key, i);
-    block = sub_key_mix(&block, &k);
+    block = sub_key_mix(block, k);
     // repeat three more times
   }
   return block;

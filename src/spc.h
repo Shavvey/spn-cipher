@@ -42,12 +42,12 @@ STable make_table(void);
 // return input of sbox, just does a linear search to find using output
 uint8_t get_inverse_sbox(Sbox output);
 Sbox get_sbox(uint8_t idx);
-Key left_circ_shift(Key *key, int n);
-Block s_box(Block *block);
-Block inverse_s_box(Block *block);
-Block sub_key_mix(Block *block, Key *key);
+Key left_circ_shift(Key key, int n);
+Block s_box(Block block);
+Block inverse_s_box(Block block);
+Block sub_key_mix(Block block, Key key);
 Key get_sub_key(Key key, uint8_t n);
-Block bit_permutation(Block *block);
+Block bit_permutation(Block block);
 Block encrypt(Block block, Key key, uint32_t rounds);
 Block decrypt(Block block, Key key, uint32_t rounds);
 char *block_as_bitstring(Block block);
