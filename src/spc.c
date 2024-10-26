@@ -1,6 +1,5 @@
 #include "spc.h"
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 // creates the mapping used for sboxes
 const STable S_TABLE = {.sbox = {{0xE},   // 0
@@ -97,7 +96,11 @@ Key get_sub_key(Key key, uint8_t n) {
   Key k = key;
   // apply the left circular shift
   for (uint8_t i = 0; i < n; i++) {
-    k = left_circ_shift(k, 1);
+    if (i % 2 == 0) {
+      k = left_circ_shift(k, 1);
+    } else {
+      k = left_circ_shift(k, 2);
+    }
   }
   return k;
 }
