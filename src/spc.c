@@ -50,6 +50,7 @@ uint8_t get_inverse_sbox(Sbox output) {
 }
 
 Block s_box(Block block) {
+  // creating new block with the sbox mapping we are given
   Block new_block = 0;
   for (int i = 0; i < S_BOXES_PER_BLOCK; i++) {
     Block bit_width = (15 << (4 * i));

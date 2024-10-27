@@ -23,8 +23,7 @@ decrypt: $(EXEC)
 	./$(EXEC) -d 1110001011010100 0001001000110100
 # test decryption and encryption
 test: $(EXEC)
-	./$(EXEC) -e 0101010101010101 1000100010001000
-	./$(EXEC) -d 1010000111010000 1000100010001000
+	./$(EXEC) -t 0101010101010101 1000100010001000
 # clean out the object files and the final executable
 clean:
 	rm $(EXEC) src/*.o
