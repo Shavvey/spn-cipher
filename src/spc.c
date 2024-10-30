@@ -2,22 +2,22 @@
 #include <stdint.h>
 #include <stdlib.h>
 // creates the mapping used for sboxes
-const STable S_TABLE = {.sbox = {{0xE},   // 0
-                                 {0x4},   // 1
-                                 {0xD},   // 2
+const STable S_TABLE = {.sbox = {{0x2},   // 0
+                                 {0xC},   // 1
+                                 {0x4},   // 2
                                  {0x1},   // 3
-                                 {0x2},   // 4
-                                 {0xF},   // 5
+                                 {0x7},   // 4
+                                 {0xA},   // 5
                                  {0xB},   // 6
-                                 {0x8},   // 7
-                                 {0x3},   // 8
-                                 {0xA},   // 9
-                                 {0x6},   // 10
-                                 {0xC},   // 11
-                                 {0x5},   // 12
-                                 {0x9},   // 13
-                                 {0x0},   // 14
-                                 {0x7}}}; // 15
+                                 {0x6},   // 7
+                                 {0x8},   // 8
+                                 {0x5},   // 9
+                                 {0x3},   // 10
+                                 {0xF},   // 11
+                                 {0xD},   // 12
+                                 {0x0},   // 13
+                                 {0xE},   // 14
+                                 {0x9}}}; // 15
 
 const PTable P_TABLE = {
     .map = {1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16}};
