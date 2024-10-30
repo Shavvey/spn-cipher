@@ -100,7 +100,7 @@ Key get_sub_key(Key key, uint8_t n) {
   // k_0 = k
   Key k = key;
   // apply the left circular shift
-  for (uint8_t i = 0; i < n; i++) {
+  for (uint8_t i = 1; i <= n; i++) {
     if (i % 2 == 0) {
       k = left_circ_shift(k, 1);
     } else {
