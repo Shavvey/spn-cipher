@@ -1,4 +1,0 @@
-#ifndef INCLUDE_SRC_BFORCE_H_
-#define INCLUDE_SRC_BFORCE_H_
-
-#endif // INCLUDE_SRC_BFORCE_H_
