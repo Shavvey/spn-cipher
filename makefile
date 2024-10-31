@@ -3,11 +3,13 @@ CC=gcc
 # enabling warnings and other compile flags
 CFLAGS=-W -Wall -g
 EXEC=spn
+BEXEC=bforce
 # list of sources i need make to compile
 OBJS=src/main.o src/spc.o src/cli.o
-DEPS=src/spc.h src/cli.h
+BOBJS=src/bforce.o src/spc.o src/cli.o
+DEPS=src/spc.h src/cli.h src/bforce.h
 
-all: $(EXEC)
+all: $(EXEC) $(BEXEC)
 
 # simplified rule that makes all object files from their header and source
 %.o: %.c $(DEPS)
@@ -15,7 +17,10 @@ all: $(EXEC)
 
 # rule to make the final executable from the created object files
 $(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) $(OBJS) -o $(EXEC)
+	$(CC) $(CFLAGS) $(OBJS) -o $(EXEC)
+
+$(BEXEC): $(BOBJS)
+	$(CC) $(CFLAGS) $(BOBJS) -o $(BEXEC)
 
 encrypt: $(EXEC)
 	./$(EXEC) -e 1110111011101110 0001001000110100
@@ -24,6 +29,7 @@ decrypt: $(EXEC)
 # test decryption and encryption
 test: $(EXEC)
 	./$(EXEC) -t 1010101010101010 0001001000110100
+
 # clean out the object files and the final executable
 clean:
 	rm $(EXEC) src/*.o
