@@ -15,7 +15,7 @@ all: $(EXEC)
 
 # rule to make the final executable from the created object files
 $(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) $(OBJS) -o $(EXEC)
+	$(CC) $(CFLAGS) $(OBJS) -o $(EXEC)
 
 encrypt: $(EXEC)
 	./$(EXEC) -e 1110111011101110 0001001000110100
