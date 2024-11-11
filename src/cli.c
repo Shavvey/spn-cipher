@@ -25,7 +25,7 @@ Mode decode_flag(const char *flag) {
 
 Block decode_text(const char *text) {
   Block block = 0;
-  // assuuming big endianess
+  // assuming big endianess
   uint32_t idx = 0;
   unsigned int len = strlen(text);
   if (len != BLOCK_SIZE) {
@@ -33,7 +33,8 @@ Block decode_text(const char *text) {
             len);
   }
   while (*text != '\0') {
-    // we can safely ingore the zeroes, they don't add any information
+    // for every 1 we encounter shift by it's index and add to block
+    // building the block value from the bitstring
     if (*text == '1') {
       block += (1 << (BLOCK_SIZE - 1 - idx));
     }
@@ -45,15 +46,14 @@ Block decode_text(const char *text) {
 
 Key decode_key(const char *key) {
   Key k = 0;
-  // assuuming big endianess
+  // assuming big endianess
   uint32_t idx = 0;
   unsigned int len = strlen(key);
   if (len != BLOCK_SIZE) {
-    fprintf(stderr, "Expected a 16 bit block of text! Recevied: %d bits\n",
+    fprintf(stderr, "Expected a 16 bit block of text! Received: %d bits\n",
             len);
   }
   while (*key != '\0') {
-    // we can safely ingore the zeroes, they don't add any information
     if (*key == '1') {
       k += (1 << (KEY_SIZE - 1 - idx));
     }
