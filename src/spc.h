@@ -41,14 +41,25 @@ extern const PTable P_TABLE;
 STable make_table(void);
 // return input of sbox, just does a linear search to find using output
 uint8_t get_inverse_sbox(Sbox output);
+// obtain s-box mapping using it's known index in the array
 Sbox get_sbox(uint8_t idx);
+// implemented left circular shift
 Key left_circ_shift(Key key, int n);
+// provides mapping of s-boxes, uses predefined array called S_TABLE
 Block s_box(Block block);
+// provide inverse mapping of the s-boxes
 Block inverse_s_box(Block block);
+// mix each sub key with the XOR provided the block, return back the block
 Block sub_key_mix(Block block, Key key);
+// return sub key using round key function (should be based on the left circular
+// shift)
 Key get_sub_key(Key key, uint8_t n);
+// permute the block and return it
 Block bit_permutation(Block block);
+// wrapper function that preform the encryption for the spn block cipher
 Block encrypt(Block block, Key key, uint32_t rounds);
+// wrapper function that preform the decryption for the spn block cipher
 Block decrypt(Block block, Key key, uint32_t rounds);
+// return back the bit string representation of a given block
 char *block_as_bitstring(Block block);
 #endif // INCLUDE_SRC_SPC_H_
