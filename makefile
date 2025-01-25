@@ -25,5 +25,6 @@ decrypt: $(EXEC)
 test: $(EXEC)
 	./$(EXEC) -t 1010101010101010 0001001000110100
 # clean out the object files and the final executable
+.PHONY: clean
 clean:
 	rm $(EXEC) src/*.o
