@@ -14,7 +14,7 @@ To compile the code into an executable, you can simple type `make` in the main d
 
 There is also a few make commands available for testing purposes:
 
-- The `decrypt` command just shows a sample encryption decryption.
+- The `decrypt` command just shows a sample decryption.
 
 ```
   make decrypt
