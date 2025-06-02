@@ -19,7 +19,6 @@ int main(int argc, char *argv[]) {
     Mode mode = decode_flag(flag);
     Block block = decode_text(text);
     Key k = decode_key(key);
-    char *strb;
     switch (mode) {
     case ENCRYPT:
       format_print_block(block, "Original");
