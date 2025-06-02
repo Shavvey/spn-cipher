@@ -1,5 +1,6 @@
 #include "spc.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 // creates the mapping used for sboxes
 const STable S_TABLE = {.sbox = {{0xE},   // 0
@@ -38,7 +39,7 @@ Sbox get_sbox(uint8_t idx) {
 uint8_t get_inverse_sbox(Sbox output) {
   int t_size = 1 << S_INPUT_SIZE;
   int idx = 0;
-  // loop through entires of sbox arr and
+  // loop through entries of sbox arr and
   // the index that maps the sbox
   for (; idx < t_size; idx++) {
     Sbox s = get_sbox(idx);
@@ -169,4 +170,18 @@ char *block_as_bitstring(Block block) {
   // null terminate the string
   str[BLOCK_SIZE] = '\0';
   return str;
+}
+
+void print_block(Block block) {
+  // get string representation of block
+  char *strb = block_as_bitstring(block);
+  printf("%s", strb);
+  // free heap allocated block of memory made for string
+  free(strb);
+}
+
+void format_print_block(Block block, char *type) {
+  printf("%s block:", type);
+  print_block(block);
+  printf(" -> %d\n", block);
 }

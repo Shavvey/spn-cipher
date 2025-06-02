@@ -22,35 +22,22 @@ int main(int argc, char *argv[]) {
     char *strb;
     switch (mode) {
     case ENCRYPT:
-      strb = block_as_bitstring(block);
-      printf("Original block:  %s -> %d\n", strb, block);
-      free(strb);
+      format_print_block(block, "Original");
       block = encrypt(block, k, ROUNDS);
-      strb = block_as_bitstring(block);
-      printf("Encrypted block: %s -> %d\n", strb, block);
-      free(strb);
+      format_print_block(block, "Encrypted");
       break;
     case DECRYPT:
-      strb = block_as_bitstring(block);
-      printf("Original block:  %s -> %d\n", strb, block);
-      free(strb);
+      format_print_block(block, "Original");
       block = decrypt(block, k, ROUNDS);
-      strb = block_as_bitstring(block);
-      printf("Decrypted block: %s -> %d\n", strb, block);
-      free(strb);
+      format_print_block(block, "Decrypted");
       break;
     case TEST:
-      strb = block_as_bitstring(block);
-      printf("Original block:  %s -> %d\n", strb, block);
-      free(strb);
+      format_print_block(block, "Original");
       block = encrypt(block, k, ROUNDS);
-      strb = block_as_bitstring(block);
-      printf("Encrypted block: %s -> %d\n", strb, block);
-      free(strb);
+      format_print_block(block, "Encrypted");
+      format_print_block(block, "Original");
       block = decrypt(block, k, ROUNDS);
-      strb = block_as_bitstring(block);
-      printf("Decrypted block: %s -> %d\n", strb, block);
-      free(strb);
+      format_print_block(block, "Decrypted");
       break;
     default:
       fprintf(stderr, "[ERROR]: Unimplemented!\n");

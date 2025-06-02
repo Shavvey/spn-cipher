@@ -23,7 +23,7 @@ typedef struct {
 // table of sbox input and output values, essentially just a static array list
 // (no resizing / rebuilding options)
 typedef struct {
-  // should be 16 entires long, enough to map every 4 bit input to another 4-bit
+  // should be 16 entries long, enough to map every 4 bit input to another 4-bit
   // output
   Sbox sbox[1 << S_INPUT_SIZE];
 } STable;
@@ -62,4 +62,8 @@ Block encrypt(Block block, Key key, uint32_t rounds);
 Block decrypt(Block block, Key key, uint32_t rounds);
 // return back the bit string representation of a given block
 char *block_as_bitstring(Block block);
+// print out block bit string representation
+void print_block(Block block);
+// print w/ specific format
+void format_print_block(Block block, char *type);
 #endif // INCLUDE_SRC_SPC_H_
