@@ -83,9 +83,7 @@ Block bit_permutation(Block block) {
     Block npos = P_TABLE.map[i];
     Block pos = i + 1;
     int diff = npos - pos;
-    // printf("Old pos: %d -> New pos: %d, Diff %d\n", pos, npos, diff);
     Block bit = block & (1 << i);
-    // printf("Bit %d: %d\n", pos, bit);
     if (diff > 0) {
       bit = bit << diff;
     } else {
@@ -133,7 +131,7 @@ Block encrypt(Block block, Key key, uint32_t rounds) {
   }
   Key k = get_sub_key(key, i);
   block = sub_key_mix(block, k);
-  // give back the block mem
+  // give back the block value
   return block;
 }
 
@@ -181,7 +179,7 @@ void print_block(Block block) {
 }
 
 void format_print_block(Block block, char *type) {
-  printf("%s block:", type);
+  printf("%s block: ", type);
   print_block(block);
   printf(" -> %d\n", block);
 }
